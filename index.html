@@ -21,34 +21,39 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <meta charset="utf-8">
         <title>بوهارون للاكترونيات و الالعاب</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#3498db">
+        <meta name="theme-color" content="#1a1a1a">
         <meta name="description" content="متجر متخصص في بيع وشراء ألعاب PS4">
         <link rel="manifest" href="manifest.json">
-        <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="apple-touch-icon" href="img/logo.png">
         <style>
             @font-face {
                 font-family: 'Cairo';
                 src: url('fonts/Cairo-Regular.ttf');
             }
             :root {
-                --primary-color: #3498db;
-                --secondary-color: #2c3e50;
-                --accent-color: #e74c3c;
+                --primary-color: #00ff88;
+                --secondary-color: #1a1a1a;
+                --accent-color: #ff3366;
                 --text-color: #ffffff;
-                --background-color: #1a1a1a;
-                --card-background: #2c3e50;
-                --gradient-start: #2c3e50;
-                --gradient-end: #3498db;
+                --background-color: #0a0a0a;
+                --card-background: rgba(255, 255, 255, 0.05);
+                --gradient-start: #00ff88;
+                --gradient-end: #00ccff;
+            }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
             body {
                 font-family: 'Cairo', sans-serif;
                 background: var(--background-color);
                 color: var(--text-color);
-                margin: 0;
-                padding: 0;
                 line-height: 1.6;
+                min-height: 100vh;
+                background-image: 
+                    radial-gradient(circle at 10% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 20%),
+                    radial-gradient(circle at 90% 80%, rgba(0, 204, 255, 0.05) 0%, transparent 20%);
             }
             .container {
                 max-width: 1200px;
@@ -57,13 +62,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             }
             .header {
                 text-align: center;
-                padding: 60px 0;
-                background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-                border-radius: 20px;
-                margin-bottom: 40px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                padding: 40px 0;
                 position: relative;
                 overflow: hidden;
+                margin-bottom: 40px;
             }
             .header::before {
                 content: '';
@@ -72,15 +74,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
-                            linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%);
-                background-size: 60px 60px;
+                background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
                 opacity: 0.1;
+                z-index: -1;
             }
             .logo {
-                max-width: 180px;
+                max-width: 150px;
                 margin-bottom: 20px;
-                filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+                filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.3));
                 transition: transform 0.3s ease;
             }
             .logo:hover {
@@ -92,7 +93,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 object-fit: cover;
                 border-radius: 20px;
                 margin-bottom: 40px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
                 transition: transform 0.3s ease;
             }
             .cover-image:hover {
@@ -103,8 +104,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 padding: 30px;
                 border-radius: 20px;
                 margin-bottom: 40px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-                border: 1px solid rgba(255,255,255,0.1);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
                 transition: transform 0.3s ease;
             }
             .store-info:hover {
@@ -120,26 +121,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 border-radius: 20px;
                 padding: 30px;
                 margin-bottom: 30px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-                border: 1px solid rgba(255,255,255,0.1);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
                 transition: all 0.3s ease;
             }
             .card:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
             }
             .card-title {
                 color: var(--primary-color);
-                border-bottom: 2px solid var(--primary-color);
-                padding-bottom: 15px;
-                margin-bottom: 20px;
                 font-size: 1.5em;
+                margin-bottom: 20px;
                 position: relative;
+                padding-bottom: 10px;
             }
             .card-title::after {
                 content: '';
                 position: absolute;
-                bottom: -2px;
+                bottom: 0;
                 left: 0;
                 width: 50px;
                 height: 2px;
@@ -158,25 +158,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 position: relative;
             }
             .status-running {
-                background-color: #2ecc71;
+                background-color: var(--primary-color);
                 animation: pulse 1.5s infinite;
             }
             @keyframes pulse {
                 0% { 
                     transform: scale(1);
-                    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4);
+                    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
                 }
                 70% { 
                     transform: scale(1.2);
-                    box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+                    box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
                 }
                 100% { 
                     transform: scale(1);
-                    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+                    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
                 }
             }
             .progress-container {
-                background: rgba(255,255,255,0.1);
+                background: rgba(255, 255, 255, 0.1);
                 border-radius: 10px;
                 margin: 15px 0;
                 overflow: hidden;
@@ -190,15 +190,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 border-radius: 10px;
             }
             #console {
-                background: rgba(0,0,0,0.3);
+                background: rgba(0, 0, 0, 0.3);
                 padding: 20px;
                 border-radius: 10px;
                 font-family: 'Liberation Mono', monospace;
                 white-space: pre-wrap;
                 overflow-x: auto;
-                border: 1px solid rgba(255,255,255,0.1);
+                border: 1px solid rgba(255, 255, 255, 0.1);
                 max-height: 300px;
                 overflow-y: auto;
+                color: var(--primary-color);
             }
             .tabs {
                 display: flex;
@@ -211,60 +212,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 border-radius: 10px;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                border: 1px solid rgba(255,255,255,0.1);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
             }
             .tab:hover {
                 background: var(--primary-color);
+                color: var(--background-color);
                 transform: translateY(-2px);
             }
             .tab.active {
                 background: var(--primary-color);
-                box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+                color: var(--background-color);
+                box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
             }
-            @media (max-width: 768px) {
-                .container {
-                    padding: 10px;
-                }
-                .header {
-                    padding: 30px 0;
-                }
-                .cover-image {
-                    height: 250px;
-                }
-                .card {
-                    padding: 20px;
-                }
-            }
-            .offline-message {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                background: #e74c3c;
-                color: white;
-                text-align: center;
-                padding: 10px;
-                z-index: 1000;
-            }
-            
-            .offline-message.show {
-                display: block;
-            }
-            
-            img {
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-            
-            img.loaded {
-                opacity: 1;
-            }
-            
             .social-links {
                 margin-top: 20px;
             }
-            
             .social-button {
                 display: inline-flex;
                 align-items: center;
@@ -277,16 +240,44 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 transition: all 0.3s ease;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             }
-            
             .social-button:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 6px 12px rgba(0,0,0,0.2);
                 background: #166fe5;
             }
-            
             .social-button i {
                 margin-left: 10px;
                 font-size: 1.2em;
+            }
+            .offline-message {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: var(--accent-color);
+                color: white;
+                text-align: center;
+                padding: 10px;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+            }
+            .offline-message.show {
+                display: block;
+            }
+            @media (max-width: 768px) {
+                .container {
+                    padding: 10px;
+                }
+                .header {
+                    padding: 20px 0;
+                }
+                .cover-image {
+                    height: 250px;
+                }
+                .card {
+                    padding: 20px;
+                }
             }
         </style>
     </head>
@@ -294,6 +285,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <div class="offline-message" id="offlineMessage">
             <i class="fas fa-wifi-slash"></i> أنت غير متصل بالإنترنت - الموقع يعمل في وضع عدم الاتصال
         </div>
+
         <div class="container">
             <div class="header">
                 <img src="img/logo.png" alt="بوهارون للاكترونيات و الالعاب" class="logo">
@@ -389,7 +381,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 const newWorker = registration.installing;
                                 newWorker.addEventListener('statechange', () => {
                                     if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                        // تحديث جديد متوفر
                                         console.log('تحديث جديد متوفر');
                                     }
                                 });
