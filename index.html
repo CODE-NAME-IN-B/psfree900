@@ -371,26 +371,73 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
             // تسجيل Service Worker
             if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js')
-                        .then(registration => {
-                            console.log('تم تسجيل Service Worker بنجاح');
-                            
-                            // التحقق من التحديثات
-                            registration.addEventListener('updatefound', () => {
-                                const newWorker = registration.installing;
-                                newWorker.addEventListener('statechange', () => {
-                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                        console.log('تحديث جديد متوفر');
+                window.addEventListener('load', async () => {
+                    try {
+                        const registration = await navigator.serviceWorker.register('/sw.js');
+                        console.log('Service Worker registered successfully:', registration);
+                        
+                        // التحقق من حالة التخزين المؤقت
+                        const cacheStatus = document.getElementById('cache-status');
+                        if (cacheStatus) {
+                            cacheStatus.textContent = 'جاري تحميل الموقع...';
+                            cacheStatus.style.color = '#ffa500';
+                        }
+
+                        // انتظار تفعيل Service Worker
+                        await navigator.serviceWorker.ready;
+                        
+                        // التحقق من الملفات المخزنة
+                        const cache = await caches.open('static-cache-v1');
+                        const keys = await cache.keys();
+                        
+                        if (cacheStatus) {
+                            if (keys.length > 0) {
+                                cacheStatus.textContent = 'تم تحميل الموقع بنجاح';
+                                cacheStatus.style.color = '#00ff88';
+                            } else {
+                                cacheStatus.textContent = 'جاري تحميل الملفات...';
+                                cacheStatus.style.color = '#ffa500';
+                            }
+                        }
+
+                        // إضافة مستمع لتحديثات Service Worker
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'activated') {
+                                    if (cacheStatus) {
+                                        cacheStatus.textContent = 'تم تحديث الموقع';
+                                        cacheStatus.style.color = '#00ff88';
                                     }
-                                });
+                                }
                             });
-                        })
-                        .catch(err => {
-                            console.error('فشل تسجيل Service Worker:', err);
                         });
+
+                    } catch (error) {
+                        console.error('Service Worker registration failed:', error);
+                        const cacheStatus = document.getElementById('cache-status');
+                        if (cacheStatus) {
+                            cacheStatus.textContent = 'فشل تحميل الموقع';
+                            cacheStatus.style.color = '#ff3366';
+                        }
+                    }
                 });
             }
+
+            // التحقق من حالة الاتصال
+            window.addEventListener('online', () => {
+                const statusIndicator = document.querySelector('.status-indicator');
+                if (statusIndicator) {
+                    statusIndicator.classList.add('status-running');
+                }
+            });
+
+            window.addEventListener('offline', () => {
+                const statusIndicator = document.querySelector('.status-indicator');
+                if (statusIndicator) {
+                    statusIndicator.classList.remove('status-running');
+                }
+            });
 
             // Initialize Remote Logger
             document.addEventListener('DOMContentLoaded', function() {

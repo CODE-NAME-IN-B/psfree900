@@ -1,6 +1,6 @@
-const CACHE_NAME = 'boharon-cache-v1';
-const STATIC_CACHE = 'static-cache-v1';
-const DYNAMIC_CACHE = 'dynamic-cache-v1';
+const CACHE_NAME = 'boharon-cache-v2';
+const STATIC_CACHE = 'static-cache-v2';
+const DYNAMIC_CACHE = 'dynamic-cache-v2';
 
 // قائمة الملفات الأساسية التي يجب تخزينها
 const STATIC_ASSETS = [
@@ -17,6 +17,11 @@ const STATIC_ASSETS = [
     '/fonts/Cairo-Regular.ttf',
     '/fonts/LiberationMono-Regular.ttf',
     '/manifest.json',
+    '/sw.js',
+    '/config.mjs',
+    '/lapse.mjs',
+    '/psfree.mjs',
+    '/send.mjs',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
 
@@ -87,12 +92,21 @@ self.addEventListener('fetch', event => {
                     }
                     return fetch(event.request)
                         .then(response => {
+                            if (!response || response.status !== 200 || response.type !== 'basic') {
+                                return response;
+                            }
                             const responseClone = response.clone();
                             caches.open(STATIC_CACHE)
                                 .then(cache => {
                                     cache.put(event.request, responseClone);
                                 });
                             return response;
+                        })
+                        .catch(() => {
+                            // إرجاع صفحة بديلة في حالة الفشل
+                            if (event.request.headers.get('accept').includes('text/html')) {
+                                return caches.match('/index.html');
+                            }
                         });
                 })
         );
@@ -101,6 +115,9 @@ self.addEventListener('fetch', event => {
         event.respondWith(
             fetch(event.request)
                 .then(response => {
+                    if (!response || response.status !== 200 || response.type !== 'basic') {
+                        return response;
+                    }
                     const responseClone = response.clone();
                     caches.open(DYNAMIC_CACHE)
                         .then(cache => {
