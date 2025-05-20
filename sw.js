@@ -1,11 +1,12 @@
-const CACHE_NAME = 'boharon-cache-v2';
-const STATIC_CACHE = 'static-cache-v2';
-const DYNAMIC_CACHE = 'dynamic-cache-v2';
+const CACHE_NAME = 'boharon-cache-v1';
+const STATIC_CACHE = 'static-cache-v1';
+const DYNAMIC_CACHE = 'dynamic-cache-v1';
 
 // قائمة الملفات الأساسية التي يجب تخزينها
 const STATIC_ASSETS = [
     '/',
     '/index.html',
+    '/css/styles.css',
     '/js/remote-logger.js',
     '/js/payload-manager.js',
     '/js/ui.js',
@@ -16,9 +17,7 @@ const STATIC_ASSETS = [
     '/fonts/Cairo-Regular.ttf',
     '/fonts/LiberationMono-Regular.ttf',
     '/manifest.json',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-solid-900.woff2',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-brands-400.woff2'
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
 
 // تثبيت Service Worker وتخزين الملفات الأساسية
@@ -58,13 +57,13 @@ self.addEventListener('activate', event => {
                     })
                 );
             }),
-            // السيطرة على جميع الصفحات المفتوحة
+            // السيطرة على جميع التبويبات المفتوحة
             clients.claim()
         ])
     );
 });
 
-// استراتيجية التخزين المؤقت: Cache First with Network Fallback
+// استراتيجية التخزين المؤقت: Cache First for Static Assets, Network First for Dynamic Content
 self.addEventListener('fetch', event => {
     // تجاهل طلبات POST
     if (event.request.method !== 'GET') return;
@@ -72,50 +71,63 @@ self.addEventListener('fetch', event => {
     // تجاهل طلبات التحليلات
     if (event.request.url.includes('analytics')) return;
 
-    event.respondWith(
-        caches.match(event.request)
-            .then(cachedResponse => {
-                if (cachedResponse) {
-                    // إرجاع النسخة المخزنة مؤقتاً
-                    return cachedResponse;
-                }
-
-                // إذا لم تكن هناك نسخة مخزنة، قم بالاتصال بالشبكة
-                return fetch(event.request)
-                    .then(response => {
-                        // نسخ الاستجابة للتخزين المؤقت
-                        const responseClone = response.clone();
-                        
-                        // تخزين الاستجابة في التخزين المؤقت الديناميكي
-                        caches.open(DYNAMIC_CACHE)
-                            .then(cache => {
-                                cache.put(event.request, responseClone);
-                            });
-
-                        return response;
-                    })
-                    .catch(() => {
-                        // إذا كان الطلب هو صفحة HTML، قم بإرجاع الصفحة الرئيسية المخزنة مؤقتاً
-                        if (event.request.headers.get('accept').includes('text/html')) {
-                            return caches.match('/index.html');
-                        }
-                        
-                        // إرجاع صورة بديلة للصور المفقودة
-                        if (event.request.headers.get('accept').includes('image')) {
-                            return caches.match('/img/logo.png');
-                        }
-
-                        // إرجاع استجابة افتراضية للطلبات الأخرى
-                        return new Response('Offline content not available', {
-                            status: 503,
-                            statusText: 'Service Unavailable',
-                            headers: new Headers({
-                                'Content-Type': 'text/plain'
-                            })
-                        });
-                    });
-            })
+    // التحقق مما إذا كان الطلب هو ملف ثابت
+    const isStaticAsset = STATIC_ASSETS.some(asset => 
+        event.request.url.endsWith(asset) || 
+        event.request.url.includes(asset)
     );
+
+    if (isStaticAsset) {
+        // استراتيجية Cache First للملفات الثابتة
+        event.respondWith(
+            caches.match(event.request)
+                .then(cachedResponse => {
+                    if (cachedResponse) {
+                        return cachedResponse;
+                    }
+                    return fetch(event.request)
+                        .then(response => {
+                            const responseClone = response.clone();
+                            caches.open(STATIC_CACHE)
+                                .then(cache => {
+                                    cache.put(event.request, responseClone);
+                                });
+                            return response;
+                        });
+                })
+        );
+    } else {
+        // استراتيجية Network First للمحتوى الديناميكي
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    const responseClone = response.clone();
+                    caches.open(DYNAMIC_CACHE)
+                        .then(cache => {
+                            cache.put(event.request, responseClone);
+                        });
+                    return response;
+                })
+                .catch(() => {
+                    return caches.match(event.request)
+                        .then(cachedResponse => {
+                            if (cachedResponse) {
+                                return cachedResponse;
+                            }
+                            
+                            // إذا كان الطلب هو صفحة HTML، قم بإرجاع الصفحة الرئيسية المخزنة مؤقتاً
+                            if (event.request.headers.get('accept').includes('text/html')) {
+                                return caches.match('/index.html');
+                            }
+                            
+                            // إرجاع صورة بديلة للصور المفقودة
+                            if (event.request.headers.get('accept').includes('image')) {
+                                return caches.match('/img/logo.png');
+                            }
+                        });
+                })
+        );
+    }
 });
 
 // تحديث التخزين المؤقت في الخلفية
