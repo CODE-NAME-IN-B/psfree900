@@ -1,0 +1,429 @@
+<!-- Copyright (C) 2023-2025 anonymous
+
+This file is part of PSFree.
+
+PSFree is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+PSFree is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+    <head>
+        <meta charset="utf-8">
+        <title>بوهارون للاكترونيات و الالعاب</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#3498db">
+        <meta name="description" content="متجر متخصص في بيع وشراء ألعاب PS4">
+        <link rel="manifest" href="manifest.json">
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="apple-touch-icon" href="img/logo.png">
+        <style>
+            @font-face {
+                font-family: 'Cairo';
+                src: url('fonts/Cairo-Regular.ttf');
+            }
+            :root {
+                --primary-color: #3498db;
+                --secondary-color: #2c3e50;
+                --accent-color: #e74c3c;
+                --text-color: #ffffff;
+                --background-color: #1a1a1a;
+                --card-background: #2c3e50;
+                --gradient-start: #2c3e50;
+                --gradient-end: #3498db;
+            }
+            body {
+                font-family: 'Cairo', sans-serif;
+                background: var(--background-color);
+                color: var(--text-color);
+                margin: 0;
+                padding: 0;
+                line-height: 1.6;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            .header {
+                text-align: center;
+                padding: 60px 0;
+                background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+                border-radius: 20px;
+                margin-bottom: 40px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                position: relative;
+                overflow: hidden;
+            }
+            .header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                            linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%);
+                background-size: 60px 60px;
+                opacity: 0.1;
+            }
+            .logo {
+                max-width: 180px;
+                margin-bottom: 20px;
+                filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+                transition: transform 0.3s ease;
+            }
+            .logo:hover {
+                transform: scale(1.05);
+            }
+            .cover-image {
+                width: 100%;
+                height: 400px;
+                object-fit: cover;
+                border-radius: 20px;
+                margin-bottom: 40px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                transition: transform 0.3s ease;
+            }
+            .cover-image:hover {
+                transform: scale(1.02);
+            }
+            .store-info {
+                background: var(--card-background);
+                padding: 30px;
+                border-radius: 20px;
+                margin-bottom: 40px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                border: 1px solid rgba(255,255,255,0.1);
+                transition: transform 0.3s ease;
+            }
+            .store-info:hover {
+                transform: translateY(-5px);
+            }
+            .store-info i {
+                margin-left: 10px;
+                color: var(--primary-color);
+                font-size: 1.2em;
+            }
+            .card {
+                background: var(--card-background);
+                border-radius: 20px;
+                padding: 30px;
+                margin-bottom: 30px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                border: 1px solid rgba(255,255,255,0.1);
+                transition: all 0.3s ease;
+            }
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            }
+            .card-title {
+                color: var(--primary-color);
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 15px;
+                margin-bottom: 20px;
+                font-size: 1.5em;
+                position: relative;
+            }
+            .card-title::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 50px;
+                height: 2px;
+                background: var(--accent-color);
+                transition: width 0.3s ease;
+            }
+            .card:hover .card-title::after {
+                width: 100px;
+            }
+            .status-indicator {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                margin-left: 10px;
+                position: relative;
+            }
+            .status-running {
+                background-color: #2ecc71;
+                animation: pulse 1.5s infinite;
+            }
+            @keyframes pulse {
+                0% { 
+                    transform: scale(1);
+                    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4);
+                }
+                70% { 
+                    transform: scale(1.2);
+                    box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+                }
+                100% { 
+                    transform: scale(1);
+                    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+                }
+            }
+            .progress-container {
+                background: rgba(255,255,255,0.1);
+                border-radius: 10px;
+                margin: 15px 0;
+                overflow: hidden;
+                height: 10px;
+            }
+            .progress-bar {
+                height: 100%;
+                background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+                width: 0%;
+                transition: width 0.3s ease;
+                border-radius: 10px;
+            }
+            #console {
+                background: rgba(0,0,0,0.3);
+                padding: 20px;
+                border-radius: 10px;
+                font-family: 'Liberation Mono', monospace;
+                white-space: pre-wrap;
+                overflow-x: auto;
+                border: 1px solid rgba(255,255,255,0.1);
+                max-height: 300px;
+                overflow-y: auto;
+            }
+            .tabs {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            .tab {
+                padding: 10px 20px;
+                background: var(--card-background);
+                border-radius: 10px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 1px solid rgba(255,255,255,0.1);
+            }
+            .tab:hover {
+                background: var(--primary-color);
+                transform: translateY(-2px);
+            }
+            .tab.active {
+                background: var(--primary-color);
+                box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            }
+            @media (max-width: 768px) {
+                .container {
+                    padding: 10px;
+                }
+                .header {
+                    padding: 30px 0;
+                }
+                .cover-image {
+                    height: 250px;
+                }
+                .card {
+                    padding: 20px;
+                }
+            }
+            .offline-message {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: #e74c3c;
+                color: white;
+                text-align: center;
+                padding: 10px;
+                z-index: 1000;
+            }
+            
+            .offline-message.show {
+                display: block;
+            }
+            
+            img {
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            img.loaded {
+                opacity: 1;
+            }
+            
+            .social-links {
+                margin-top: 20px;
+            }
+            
+            .social-button {
+                display: inline-flex;
+                align-items: center;
+                background: #1877f2;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 50px;
+                text-decoration: none;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+            
+            .social-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+                background: #166fe5;
+            }
+            
+            .social-button i {
+                margin-left: 10px;
+                font-size: 1.2em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="offline-message" id="offlineMessage">
+            <i class="fas fa-wifi-slash"></i> أنت غير متصل بالإنترنت - الموقع يعمل في وضع عدم الاتصال
+        </div>
+        <div class="container">
+            <div class="header">
+                <img src="img/logo.png" alt="بوهارون للاكترونيات و الالعاب" class="logo">
+                <h1>بوهارون للاكترونيات و الالعاب</h1>
+                <p>متجر متخصص في بيع وشراء ألعاب PS4</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/profile.php?id=100092719610618&mibextid=ZbWKwL" target="_blank" class="social-button">
+                        <i class="fab fa-facebook-f"></i>
+                        تابعنا على فيسبوك
+                    </a>
+                </div>
+            </div>
+
+            <img src="img/cover.jpg" alt="PS4 Games" class="cover-image">
+
+            <div class="store-info">
+                <h2><i class="fas fa-store"></i> معلومات المتجر</h2>
+                <p><i class="fas fa-map-marker-alt"></i> العنوان: اجدابيا سيمافرو شارع طرابلس تحت الفندق السياحي</p>
+                <p><i class="fas fa-phone"></i> للتواصل: [رقم الهاتف]</p>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">حالة التشغيل</h2>
+                <div id="status-container">
+                    <p><span class="status-indicator status-running" id="status-icon"></span> <span id="status-text">جاري تشغيل الاكسبلوت...</span></p>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="console">وحدة التحكم</div>
+            </div>
+
+            <div class="tab-content active" id="tab-console">
+                <pre id="console"></pre>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">دليل سريع</h2>
+                <ol>
+                    <li>افتح هذه الصفحة في متصفح PS4</li>
+                    <li>سيتم تشغيل الاكسبلوت تلقائياً</li>
+                    <li>انتظر حتى اكتمال العملية</li>
+                    <li>إذا نجحت العملية، سيتم تشغيل البايلود تلقائياً</li>
+                </ol>
+                <p><strong>ملاحظة:</strong> في حالة حدوث Kernel Panic، قم بإيقاف تشغيل الجهاز (لا تقم بإعادة التشغيل) وحاول مرة أخرى.</p>
+            </div>
+        </div>
+
+        <script src="js/remote-logger.js"></script>
+        <script src="js/payload-manager.js"></script>
+        <script src="js/ui.js"></script>
+        <script src="payload.js"></script>
+        <script>
+            // تحسين تحميل الصور
+            document.addEventListener('DOMContentLoaded', function() {
+                const images = document.querySelectorAll('img');
+                images.forEach(img => {
+                    if (img.complete) {
+                        img.classList.add('loaded');
+                    } else {
+                        img.addEventListener('load', function() {
+                            this.classList.add('loaded');
+                        });
+                    }
+                });
+            });
+
+            // التحقق من حالة الاتصال
+            function updateOnlineStatus() {
+                const offlineMessage = document.getElementById('offlineMessage');
+                if (!navigator.onLine) {
+                    offlineMessage.classList.add('show');
+                } else {
+                    offlineMessage.classList.remove('show');
+                }
+            }
+
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+
+            // تسجيل Service Worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => {
+                            console.log('تم تسجيل Service Worker بنجاح');
+                            
+                            // التحقق من التحديثات
+                            registration.addEventListener('updatefound', () => {
+                                const newWorker = registration.installing;
+                                newWorker.addEventListener('statechange', () => {
+                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                        // تحديث جديد متوفر
+                                        console.log('تحديث جديد متوفر');
+                                    }
+                                });
+                            });
+                        })
+                        .catch(err => {
+                            console.error('فشل تسجيل Service Worker:', err);
+                        });
+                });
+            }
+
+            // Initialize Remote Logger
+            document.addEventListener('DOMContentLoaded', function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const serverIp = urlParams.get('server');
+
+                const loggerConfig = {
+                    enabled: true,
+                    localConsole: true
+                };
+
+                if (serverIp) {
+                    loggerConfig.serverUrl = `http://${serverIp}:3000`;
+                }
+
+                window.RemoteLogger.init(loggerConfig);
+
+                window.RemoteLogger.info('تم تهيئة النظام', {
+                    userAgent: navigator.userAgent,
+                    url: window.location.href,
+                    timestamp: new Date().toISOString()
+                });
+            });
+        </script>
+        <script type="module" src="./alert.mjs"></script>
+    </body>
+</html>

@@ -1,0 +1,19 @@
+{
+    "name": "بوهارون للاكترونيات و الالعاب",
+    "short_name": "بوهارون",
+    "description": "متجر متخصص في بيع وشراء ألعاب PS4",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#1a1a1a",
+    "theme_color": "#3498db",
+    "icons": [
+        {
+            "src": "img/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ],
+    "dir": "rtl",
+    "lang": "ar",
+    "orientation": "portrait"
+} 
