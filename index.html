@@ -279,9 +279,133 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     padding: 20px;
                 }
             }
+
+            /* Cache Loading Screen Styles */
+            .cache-loading-screen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--background-color);
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+                text-align: center;
+            }
+
+            .cache-loading-screen.hidden {
+                display: none;
+            }
+
+            .cache-progress {
+                width: 80%;
+                max-width: 400px;
+                margin: 20px 0;
+            }
+
+            .cache-progress-bar {
+                width: 100%;
+                height: 20px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            .cache-progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+                width: 0%;
+                transition: width 0.3s ease;
+                border-radius: 10px;
+            }
+
+            .cache-status {
+                margin: 10px 0;
+                color: var(--primary-color);
+                font-size: 1.2em;
+            }
+
+            .cache-instructions {
+                background: var(--card-background);
+                padding: 20px;
+                border-radius: 10px;
+                margin-top: 20px;
+                max-width: 600px;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .cache-instructions h3 {
+                color: var(--primary-color);
+                margin-bottom: 15px;
+            }
+
+            .cache-instructions ol {
+                text-align: right;
+                padding-right: 20px;
+            }
+
+            .cache-instructions li {
+                margin: 10px 0;
+            }
+
+            .cache-instructions .highlight {
+                color: var(--accent-color);
+                font-weight: bold;
+            }
+
+            .continue-button {
+                background: var(--primary-color);
+                color: var(--background-color);
+                border: none;
+                padding: 15px 30px;
+                border-radius: 50px;
+                font-size: 1.2em;
+                cursor: pointer;
+                margin-top: 20px;
+                transition: all 0.3s ease;
+                font-weight: bold;
+            }
+
+            .continue-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+            }
+
+            .continue-button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
         </style>
     </head>
     <body>
+        <!-- Cache Loading Screen -->
+        <div class="cache-loading-screen" id="cacheLoadingScreen">
+            <h2>جاري تحميل الكاش...</h2>
+            <div class="cache-progress">
+                <div class="cache-progress-bar">
+                    <div class="cache-progress-fill" id="cacheProgressFill"></div>
+                </div>
+                <div class="cache-status" id="cacheStatus">0%</div>
+            </div>
+            <div class="cache-instructions" id="cacheInstructions" style="display: none;">
+                <h3>تعليمات الاستخدام</h3>
+                <ol>
+                    <li>تم تحميل الكاش بنجاح</li>
+                    <li>قم بالخروج من المتصفح</li>
+                    <li>قم بإغلاق الإنترنت</li>
+                    <li>أعد فتح المتصفح</li>
+                    <li>سيبدأ الاكسبلوت تلقائياً</li>
+                </ol>
+                <p class="highlight">ملاحظة: تأكد من اتباع الخطوات بالترتيب للحصول على أفضل نتيجة</p>
+                <button class="continue-button" id="continueButton" disabled>متابعة</button>
+            </div>
+        </div>
+
         <div class="offline-message" id="offlineMessage">
             <i class="fas fa-wifi-slash"></i> أنت غير متصل بالإنترنت - الموقع يعمل في وضع عدم الاتصال
         </div>
@@ -413,6 +537,40 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     url: window.location.href,
                     timestamp: new Date().toISOString()
                 });
+            });
+
+            // Cache Loading Logic
+            document.addEventListener('DOMContentLoaded', function() {
+                const cacheLoadingScreen = document.getElementById('cacheLoadingScreen');
+                const cacheProgressFill = document.getElementById('cacheProgressFill');
+                const cacheStatus = document.getElementById('cacheStatus');
+                const cacheInstructions = document.getElementById('cacheInstructions');
+                const continueButton = document.getElementById('continueButton');
+                let progress = 0;
+
+                // Simulate cache loading
+                const cacheLoadingInterval = setInterval(() => {
+                    progress += 1;
+                    cacheProgressFill.style.width = `${progress}%`;
+                    cacheStatus.textContent = `${progress}%`;
+
+                    if (progress >= 100) {
+                        clearInterval(cacheLoadingInterval);
+                        cacheInstructions.style.display = 'block';
+                        continueButton.disabled = false;
+                    }
+                }, 50);
+
+                // Continue button click handler
+                continueButton.addEventListener('click', () => {
+                    cacheLoadingScreen.classList.add('hidden');
+                });
+
+                // Check if running on PS4
+                const isPS4 = navigator.userAgent.includes('PlayStation 4');
+                if (!isPS4) {
+                    cacheLoadingScreen.classList.add('hidden');
+                }
             });
         </script>
         <script type="module" src="./alert.mjs"></script>
